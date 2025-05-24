@@ -15,7 +15,7 @@ pipeline {
         }
         stage ("Git Checkout") {
             steps {
-                git 'https://github.com/onose147/DevOps-Project-Zomato-Onose.git'
+                git 'https://github.com/onose147/zomato.git'
             }
         }
         stage("Sonarqube Analysis"){
@@ -38,12 +38,7 @@ pipeline {
                 sh "npm install"
             }
         }
-        stage('OWASP FS SCAN') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit -n', odcInstallation: 'DP-Check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-    }
-}
+        
         stage ("Trivy File Scan") {
             steps {
                 sh "trivy fs . > trivy.txt"
@@ -51,15 +46,15 @@ pipeline {
         }
         stage ("Build Docker Image") {
             steps {
-                sh "docker build -t zomato ."
+                sh "docker build -t myzomato ."
             }
         }
         stage ("Tag & Push to DockerHub") {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker') {
-                        sh "docker tag zomato onose147/zomato:latest "
-                        sh "docker push onose147/zomato:latest "
+                        sh "docker tag myzomato onose147/myzomato:latest "
+                        sh "docker push onose147/myzomato:latest "
                     }
                 }
             }
@@ -77,7 +72,7 @@ pipeline {
         }
         stage ("Deploy to Container") {
             steps {
-                sh 'docker run -d --name zomato -p 3000:3000 onose147/zomato:latest'
+                sh 'docker run -d --name myzomato -p 3000:3000 onose147/myzomato:latest'
             }
         }
     }

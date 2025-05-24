@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: zomato
   labels:
-    app: zomato
+    app: myzomato
 spec:
   type: NodePort
   ports:
@@ -11,4 +11,4 @@ spec:
     targetPort: 3000
     nodePort: 30001
   selector:
-    app: zomato
+    app: myzomato
